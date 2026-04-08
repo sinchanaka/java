@@ -1,0 +1,224 @@
+User Registration App
+Complete Beginner's Guide
+Spring Boot • MongoDB • HTML / CSS / JavaScript
+This guide assumes ZERO prior knowledge. Every step is explained from scratch.
+1. Project Overview
+This is a full-stack web application that allows users to register by filling out a form. The form data is sent
+to a Java backend, which saves it to a MongoDB database.
+The three main parts are:
+Part
+Frontend
+Backend
+Database
+Technology
+HTML + CSS + JS
+Java Spring Boot
+What it does
+The web page the user sees and fills in
+Receives data, validates it, saves to DB
+MongoDB
+2. Project Folder Structure
+Stores all registered user documents
+After downloading / creating the project, your folder layout will look like this:
+user-registration-app/
+ frontend/
+ index.html ← The web page
+ style.css ← Page styling
+ script.js ← Form logic & API calls
+ backend/
+ pom.xml ← Maven build file (lists dependencies)
+ src/main/
+ java/com/example/userregistration/
+ UserRegistrationApplication.java ← Main class
+ controller/UserController.java ← Handles HTTP requests
+ service/UserService.java ← Business logic
+ repository/UserRepository.java ← DB operations
+ model/User.java ← Data structure
+ resources/
+ application.properties ← Config (DB, port)
+3. Install Java (JDK 17)
+Java is the programming language our backend is written in. We need the JDK (Java Development Kit),
+not just the JRE.
+Windows
+• Go to: https://adoptium.net
+• Click Download → choose Temurin 17 (LTS)
+• Download the .msi installer and run it
+• Check "Set JAVA_HOME" and "Add to PATH" during install
+macOS
+• Option 1 – Homebrew (recommended): open Terminal and run:
+brew install openjdk@17
+• Option 2: download from https://adoptium.net
+Linux (Ubuntu/Debian)
+sudo apt update
+sudo apt install openjdk-17-jdk
+Verify Installation
+Open a terminal / command prompt and run:
+java -version
+ You should see something like: openjdk version "17.0.x" ...
+4. Install Maven
+Maven is a build tool for Java. It downloads the libraries (Spring Boot, MongoDB driver, etc.) listed in
+pom.xml and compiles your project.
+Windows
+• Go to: https://maven.apache.org/download.cgi
+• Download the Binary zip archive (e.g., apache-maven-3.9.x-bin.zip)
+• Extract it to C:\Program Files\Maven
+• Add C:\Program Files\Maven\bin to your system PATH environment variable
+macOS
+brew install maven
+Linux (Ubuntu/Debian)
+sudo apt install maven
+Verify Installation
+mvn -version
+ You should see: Apache Maven 3.x.x ...
+5. Install MongoDB
+MongoDB is our database. It stores data as JSON-like documents (not rows and columns like SQL). We
+need to install it locally on your computer.
+Windows
+• Go to: https://www.mongodb.com/try/download/community
+• Select: Version 7.x, Platform: Windows, Package: msi
+• Run the installer — choose 'Complete' installation
+• Check "Install MongoDB as a Service" so it starts automatically
+macOS
+brew tap mongodb/brew
+brew install mongodb-community
+Linux (Ubuntu)
+sudo apt install -y mongodb
+ For a newer version on Ubuntu, follow the official guide at:
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+6. Start MongoDB
+You must start MongoDB before running the Spring Boot application.
+Windows (if installed as a service)
+MongoDB starts automatically. To check / start manually:
+net start MongoDB
+macOS
+brew services start mongodb-community
+Linux
+sudo systemctl start mongod
+sudo systemctl enable mongod # auto-start on boot
+Verify MongoDB is running
+mongosh
+ You should see a '>' prompt. Type 'exit' to quit.
+ If mongosh is not found, try: mongo (older versions)
+View the database after running the app
+mongosh
+use userdb
+db.users.find().pretty()
+7. Run the Spring Boot Backend
+Open a terminal and navigate into the backend folder:
+cd path/to/user-registration-app/backend
+Run the application using Maven:
+mvn spring-boot:run
+The first time you run this, Maven will download all dependencies (may take 1–3 minutes). Subsequent
+runs are much faster.
+ When you see 'Started UserRegistrationApplication' in the console, the server is ready!
+ The server runs on http://localhost:8080 — keep this terminal open.
+Alternatively — Build a JAR and run it
+mvn clean package
+java -jar target/user-registration-0.0.1-SNAPSHOT.jar
+8. Open the Frontend
+The frontend is a plain HTML file — no build step required!
+Option A — Open directly in browser (simplest)
+• Open your file manager / Finder
+• Navigate to: user-registration-app/frontend/
+• Double-click index.html
+• It opens in your browser. Fill in the form and click Register!
+Option B — Use a local server (recommended)
+If you have Python installed:
+cd path/to/user-registration-app/frontend
+python -m http.server 3000
+Then open: http://localhost:3000 in your browser.
+ If you get a CORS error using Option A (file://), use Option B instead.
+9. How Frontend Connects to Backend
+The frontend uses the browser's built-in fetch() API to send HTTP requests to the backend. Here is the
+flow step by step:
+Step-by-step flow
+# What happens Details
+1 User fills form User types their details in the HTML form
+2 Clicks Register The submitForm() function in script.js runs
+3 Validation JS checks all fields are filled and password >= 6 chars
+4 fetch() call JS sends POST request to http://localhost:8080/api/users
+5 Backend receives Spring Boot's UserController.registerUser() method runs
+6 Service layer UserService.registerUser() is called
+7 Repository saves userRepository.save(user) stores data in MongoDB
+8 Response sent Backend returns JSON: { message, userId, name, ... }
+9 Frontend shows JS reads response and shows green success message
+10. Sample Data
+Sample JSON Request (POST /api/users)
+{
+"userId": "user001",
+"username": "john_doe",
+"password": "pass@123",
+"name": "John Doe",
+"city": "Mangaluru",
+"dateOfBirth": "1995-06-15"
+}
+Sample API Response (201 Created)
+{
+"message": "User registered successfully!",
+"id": "64f1a2b3c4d5e6f7a8b9c0d1",
+"userId": "user001",
+"username": "john_doe",
+"name": "John Doe",
+"city": "Mangaluru",
+"dateOfBirth": "1995-06-15"
+}
+Sample Error Response (400 Bad Request)
+{ "error": "password must be at least 6 characters" }
+11. Test the API Using Postman
+Postman is a free tool that lets you send HTTP requests to test APIs.
+Install Postman
+• Download from: https://www.postman.com/downloads/
+• Install and open it (no account needed for basic use)
+Test the POST endpoint
+• Click New → HTTP Request
+• Set method to POST
+• Enter URL: http://localhost:8080/api/users
+• Click the Body tab → select raw → choose JSON from the dropdown
+• Paste the sample JSON from Section 10
+• Click Send
+ You should get a 201 Created response with the user details.
+Test the GET endpoint
+• Set method to GET
+• URL: http://localhost:8080/api/users
+• Click Send — you'll see all registered users
+Test in Browser (GET only)
+Open your browser and go to:
+http://localhost:8080/api/users
+ The browser will show a JSON array of all users saved in MongoDB.
+12. Common Issues & Fixes
+mvn command not found
+→ Maven is not in your PATH. Re-check installation steps.
+Port 8080 already in use
+→ Another app is using port 8080. Change 'server.port=8081' in application.properties and update the fetch URL in
+script.js to match.
+MongoSocketOpenException / Connection refused
+→ MongoDB is not running. Start it first (see Section 6).
+CORS error in browser console
+→ @CrossOrigin is in the controller. If still failing, try serving frontend via Python HTTP server (Option B in Section 8).
+Whitelabel Error Page (404)
+→ You typed the wrong URL. Make sure it's /api/users not /api/user.
+Registration failed message on frontend
+→ Check that the Spring Boot server is running. Open browser console (F12) to see the actual error.
+13. Architecture Overview
+Layer
+Frontend
+Controller
+Service
+Repository
+Model
+File
+index.html, style.css, script.js
+UserController.java
+UserService.java
+Responsibility
+User interface, form, fetch API call
+Receives HTTP requests, returns responses
+Business logic, calls repository
+UserRepository.java
+User.java
+Database
+MongoDB (userdb → users)
+Database queries via Spring Data
+Data structure / MongoDB document shape
+Persistent storage
+Happy Coding!  This project is a great foundation to build login, dashboard, and more features.
