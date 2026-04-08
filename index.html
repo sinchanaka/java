@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Registration</title>
+  <!-- Link to our CSS file -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>User Registration</h1>
+    <p class="subtitle">Fill in the details below to create your account</p>
+
+    <!-- Registration Form -->
+    <div class="form-box">
+
+      <!-- User ID Field -->
+      <div class="form-group">
+        <label for="userId">User ID</label>
+        <input type="text" id="userId" placeholder="e.g. user001" />
+        <span class="error" id="userIdError"></span>
+      </div>
+
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="e.g. john_doe" />
+        <span class="error" id="usernameError"></span>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Minimum 6 characters" />
+        <span class="error" id="passwordError"></span>
+      </div>
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="e.g. John Doe" />
+        <span class="error" id="nameError"></span>
+      </div>
+
+      <!-- City Field -->
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="e.g. Mangaluru" />
+        <span class="error" id="cityError"></span>
+      </div>
+
+      <!-- Date of Birth Field -->
+      <div class="form-group">
+        <label for="dateOfBirth">Date of Birth</label>
+        <input type="date" id="dateOfBirth" />
+        <span class="error" id="dateOfBirthError"></span>
+      </div>
+
+      <!-- Submit Button -->
+      <button id="submitBtn" onclick="submitForm()">Register</button>
+
+      <!-- Success / Error Message Box -->
+      <div id="messageBox" class="message-box hidden"></div>
+
+    </div>
+  </div>
+
+  <!-- Link to our JavaScript file -->
+  <script src="script.js"></script>
+</body>
+</html>
